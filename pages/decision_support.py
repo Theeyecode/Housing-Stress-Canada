@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("🎯 Decision Support (Placeholder)")
+st.title("Decision Support (Placeholder)")
 
 st.write("""
 This section will support policy-oriented decision tools,

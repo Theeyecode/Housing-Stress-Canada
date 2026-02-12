@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-st.title("📊 Exploratory Data Analysis (EDA)")
+st.title("Exploratory Data Analysis (EDA)")
 
 st.write("""
 This section presents descriptive summaries of housing

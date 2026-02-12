@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("ℹ️ About & Disclaimer")
+st.title("About & Disclaimer")
 
 st.markdown("""
 **Course:** DAMO 699 – Capstone Project  
