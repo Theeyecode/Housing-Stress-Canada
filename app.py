@@ -4,7 +4,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🏠 Housing Affordability Stress in Canada")
+st.title("Housing Affordability Stress in Canada")
 st.caption("Decision-support dashboard using CHS 2022 PUMF")
 
 st.markdown("""
