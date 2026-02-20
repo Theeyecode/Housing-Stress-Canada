@@ -6,3 +6,5 @@ plotly>=5.18
 streamlit>=1.31
 jupyter>=1.0
 openpyxl>=3.1
+scikit-learn
+joblib
