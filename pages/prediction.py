@@ -1,8 +1,11 @@
 import streamlit as st
+from src.data_loader import load_scored_data
 
-st.title("Prediction (Placeholder)")
+st.title("Prediction Results")
 
-st.warning("""
-Predictive models will be added in later stages.
-This page is a placeholder to define system structure.
-""")
+df = load_scored_data()
+
+st.success("Scored dataset loaded successfully!")
+
+st.write("Preview:")
+st.dataframe(df.head())
