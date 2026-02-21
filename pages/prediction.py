@@ -1,6 +1,7 @@
 import streamlit as st
 from src.data_loader import load_scored_data
 import pandas as pd
+import plotly.express as px
 
 st.title("Prediction Results")
 
@@ -70,10 +71,19 @@ if len(filtered_df) > 0:
 
 # Confusion Matrix Components
 
-TP = ((df["PCHN_Clean"] == 1) & (df["Predicted_Housing_Stress"] == 1)).sum()
-FP = ((df["PCHN_Clean"] == 0) & (df["Predicted_Housing_Stress"] == 1)).sum()
-TN = ((df["PCHN_Clean"] == 0) & (df["Predicted_Housing_Stress"] == 0)).sum()
-FN = ((df["PCHN_Clean"] == 1) & (df["Predicted_Housing_Stress"] == 0)).sum()
+# Confusion Matrix Components (USE FILTERED DATA)
+
+TP = ((filtered_df["PCHN_Clean"] == 1) &
+      (filtered_df["Predicted_Housing_Stress"] == 1)).sum()
+
+FP = ((filtered_df["PCHN_Clean"] == 0) &
+      (filtered_df["Predicted_Housing_Stress"] == 1)).sum()
+
+TN = ((filtered_df["PCHN_Clean"] == 0) &
+      (filtered_df["Predicted_Housing_Stress"] == 0)).sum()
+
+FN = ((filtered_df["PCHN_Clean"] == 1) &
+      (filtered_df["Predicted_Housing_Stress"] == 0)).sum()
 
 st.subheader("Confusion Matrix (Counts)")
 
@@ -91,3 +101,169 @@ st.caption(
     "TP = True Positive | FP = False Positive | "
     "TN = True Negative | FN = False Negative"
 )
+
+
+# GROUP BREAKDOWN VIEWS
+
+st.divider()
+st.header("Group Breakdown Views")
+
+def flagged_rate_by_group(df, group_col):
+    result = (
+        df
+        .groupby(group_col)["Predicted_Housing_Stress"]
+        .mean()
+        .reset_index()
+    )
+    result["Percent_Flagged"] = result["Predicted_Housing_Stress"] * 100
+    return result.sort_values("Percent_Flagged", ascending=False)
+
+
+def create_interactive_bar(df, group_col, title):
+    fig = px.bar(
+        df,
+        x="Percent_Flagged",
+        y=group_col,
+        orientation="h",
+        text="Percent_Flagged",
+        color="Percent_Flagged",
+        color_continuous_scale="Blues"
+    )
+
+    fig.update_traces(
+        texttemplate="%{text:.1f}%",
+        textposition="outside"
+    )
+
+    fig.update_layout(
+        title=title,
+        xaxis_title="% Flagged (Threshold = 0.30)",
+        yaxis_title="",
+        coloraxis_showscale=False,
+        template="plotly_white",
+        height=450,
+        margin=dict(l=40, r=40, t=60, b=40)
+    )
+
+    fig.update_xaxes(range=[0, 100])
+
+    return fig
+
+# % Flagged by Province
+
+if "Province_Name" in filtered_df.columns:
+    province_breakdown = flagged_rate_by_group(filtered_df, "Province_Name")
+    fig_province = create_interactive_bar(
+        province_breakdown,
+        "Province_Name",
+        "% Flagged by Province"
+    )
+    st.plotly_chart(fig_province, width="stretch")
+
+# % Flagged by Tenure
+
+if "Tenure_Group" in filtered_df.columns:
+    tenure_breakdown = flagged_rate_by_group(filtered_df, "Tenure_Group")
+    fig_tenure = create_interactive_bar(
+        tenure_breakdown,
+        "Tenure_Group",
+        "% Flagged by Tenure Group"
+    )
+    st.plotly_chart(fig_tenure, width="stretch")
+
+# LABEL MAPPINGS
+PSTIR_LABELS = {
+    1: "< 30% Income on Shelter",
+    2: "30%–49% Income on Shelter",
+    3: "50%+ Income on Shelter"
+}
+
+PHTYPE_LABELS = {
+    1: "One-person Household",
+    2: "Couple without Children",
+    3: "Couple with Children",
+    4: "Lone-parent Family",
+    5: "Other Family Household",
+    6: "Multiple-family Household"
+}
+
+def flagged_rate_by_group(df, group_col, label_map=None, order=None):
+    result = (
+        df
+        .groupby(group_col)["Predicted_Housing_Stress"]
+        .mean()
+        .reset_index()
+    )
+
+    result["Percent_Flagged"] = result["Predicted_Housing_Stress"] * 100
+
+    # Apply label mapping if provided
+    if label_map:
+        result[group_col] = result[group_col].map(label_map)
+
+    # Enforce logical ordering if provided
+    if order:
+        result[group_col] = pd.Categorical(
+            result[group_col],
+            categories=order,
+            ordered=True
+        )
+        result = result.sort_values(group_col)
+    else:
+        result = result.sort_values("Percent_Flagged", ascending=False)
+
+    return result
+
+# % Flagged by Income Group (PSTIR_GR)
+
+if "PSTIR_GR" in filtered_df.columns:
+
+    stir_order = [
+        "< 30% Income on Shelter",
+        "30%–49% Income on Shelter",
+        "50%+ Income on Shelter"
+    ]
+
+    stir_breakdown = flagged_rate_by_group(
+        filtered_df,
+        "PSTIR_GR",
+        label_map=PSTIR_LABELS,
+        order=stir_order
+    )
+
+    fig_stir = create_interactive_bar(
+        stir_breakdown,
+        "PSTIR_GR",
+        "% Flagged by Shelter Cost-to-Income Group"
+    )
+
+    st.plotly_chart(fig_stir, width="stretch")
+
+
+# % Flagged by Household Type (PHTYPE_Clean)
+
+if "PHTYPE_Clean" in filtered_df.columns:
+
+    hh_order = [
+        "One-person Household",
+        "Lone-parent Family",
+        "Couple without Children",
+        "Couple with Children",
+        "Other Family Household",
+        "Multiple-family Household"
+    ]
+
+    hh_breakdown = flagged_rate_by_group(
+        filtered_df,
+        "PHTYPE_Clean",
+        label_map=PHTYPE_LABELS,
+        order=hh_order
+    )
+
+    fig_hh = create_interactive_bar(
+        hh_breakdown,
+        "PHTYPE_Clean",
+        "% Flagged by Household Composition"
+    )
+
+    st.plotly_chart(fig_hh, width="stretch")
