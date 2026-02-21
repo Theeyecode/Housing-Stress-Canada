@@ -12,6 +12,35 @@ st.success("Scored dataset loaded successfully!")
 st.write("Preview:")
 st.dataframe(df.head())
 
+# MODEL INFORMATION PANEL
+
+with st.expander("Model Information", expanded=False):
+
+    st.markdown("### Model Details")
+
+    col1, col2 = st.columns(2)
+
+    col1.markdown("**Model Type:** Logistic Regression")
+    col1.markdown("**Decision Threshold:** 0.30")
+
+    col2.markdown("**Training Dataset:** CHS 2022 PUMF")
+    col2.markdown("**Prediction Target:** Core Housing Need (PCHN)")
+
+    st.markdown("---")
+    st.markdown("### Performance Metrics (Validation Set)")
+
+    metric_col1, metric_col2, metric_col3, metric_col4 = st.columns(4)
+
+    metric_col1.metric("ROC-AUC", "0.90")
+    metric_col2.metric("PR-AUC", "0.58")
+    metric_col3.metric("Recall", "0.75")
+    metric_col4.metric("Precision", "0.53")
+
+    st.caption(
+        "Metrics are computed during model validation. "
+        "No model training or tuning occurs within this dashboard."
+    )
+
 # SIDEBAR FILTERS
 st.sidebar.header("Filter Households")
 
@@ -214,9 +243,9 @@ def flagged_rate_by_group(df, group_col, label_map=None, order=None):
 
     return result
 
-# % Flagged by Income Group (PSTIR_GR)
+# % Flagged by Income Group (PSTIR_GR_Clean)
 
-if "PSTIR_GR" in filtered_df.columns:
+if "PSTIR_GR_Clean" in filtered_df.columns:
 
     stir_order = [
         "< 30% Income on Shelter",
@@ -226,14 +255,14 @@ if "PSTIR_GR" in filtered_df.columns:
 
     stir_breakdown = flagged_rate_by_group(
         filtered_df,
-        "PSTIR_GR",
+        "PSTIR_GR_Clean",
         label_map=PSTIR_LABELS,
         order=stir_order
     )
 
     fig_stir = create_interactive_bar(
         stir_breakdown,
-        "PSTIR_GR",
+        "PSTIR_GR_Clean",
         "% Flagged by Shelter Cost-to-Income Group"
     )
 
