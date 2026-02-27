@@ -25,7 +25,7 @@ This confirms the economic vulnerability gradient.
 """)
 
 st.image(
-    "core_housing_need_by_province.png",
+    "housing_need_by_income_quintile.png",
     caption="Percentage of Households in Core Housing Need by Income Quintile",
     width="stretch"
 )
