@@ -1,0 +1,3 @@
+# Placeholder for model predictions
+# Expected columns:
+# household_id," predicted_pchn_probability"
