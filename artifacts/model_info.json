@@ -1,0 +1,8 @@
+{
+  "model_type": "Logistic Regression",
+  "threshold": 0.3,
+  "roc_auc": 0.9008,
+  "pr_auc": 0.5774,
+  "recall_at_threshold": 0.744,
+  "precision_at_threshold": 0.543
+}
