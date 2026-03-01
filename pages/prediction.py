@@ -140,12 +140,13 @@ st.header("Validation View: Shelter Cost Burden Gradient")
 
 try:
     robustness_df = pd.read_csv("artifacts/pstir_robustness.csv")
-    st.write(robustness_df.columns.tolist())
+    #st.write(robustness_df.columns.tolist())
     
     fig_validation = px.line(
         robustness_df,
         x="PSTIR_GR_Clean",
-        y="Predicted_Housing_Stress",
+        y=["flagged_rate","true_stress_rate"],
+        
         markers=True
     )
 
