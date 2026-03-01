@@ -2,7 +2,7 @@ import streamlit as st
 from src.data_loader import load_scored_data
 import pandas as pd
 import plotly.express as px
-
+import json
 st.title("Prediction Results")
 
 df = load_scored_data()
@@ -11,35 +11,6 @@ st.success("Scored dataset loaded successfully!")
 
 st.write("Preview:")
 st.dataframe(df.head())
-
-# MODEL INFORMATION PANEL
-
-with st.expander("Model Information", expanded=False):
-
-    st.markdown("### Model Details")
-
-    col1, col2 = st.columns(2)
-
-    col1.markdown("**Model Type:** Logistic Regression")
-    col1.markdown("**Decision Threshold:** 0.30")
-
-    col2.markdown("**Training Dataset:** CHS 2022 PUMF")
-    col2.markdown("**Prediction Target:** Core Housing Need (PCHN)")
-
-    st.markdown("---")
-    st.markdown("### Performance Metrics (Validation Set)")
-
-    metric_col1, metric_col2, metric_col3, metric_col4 = st.columns(4)
-
-    metric_col1.metric("ROC-AUC", "0.90")
-    metric_col2.metric("PR-AUC", "0.58")
-    metric_col3.metric("Recall", "0.75")
-    metric_col4.metric("Precision", "0.53")
-
-    st.caption(
-        "Metrics are computed during model validation. "
-        "No model training or tuning occurs within this dashboard."
-    )
 
 # SIDEBAR FILTERS
 st.sidebar.header("Filter Households")
@@ -97,6 +68,106 @@ if len(filtered_df) > 0:
     )
 
     st.divider()
+
+
+# MODEL INFORMATION PANEL
+
+with st.expander("Model Information", expanded=False):
+
+    try:
+        with open("artifacts/model_info.json", "r") as f:
+            model_info = json.load(f)
+
+        st.markdown("### Model Details")
+
+        col1, col2 = st.columns(2)
+
+        col1.markdown(f"**Model Type:** {model_info['model_type']}")
+        col1.markdown(f"**Decision Threshold:** {model_info['threshold']}")
+
+        # col2.markdown(f"**Training Dataset:** {model_info['training_data']}")
+        # col2.markdown(f"**Prediction Target:** {model_info['target']}")
+
+        st.markdown("---")
+        st.markdown("### Performance Metrics (Validation Set)")
+
+        metric_col1, metric_col2, metric_col3, metric_col4 = st.columns(4)
+
+        metric_col1.metric("ROC-AUC", f"{model_info['roc_auc']:.3f}")
+        metric_col2.metric("PR-AUC", f"{model_info['pr_auc']:.3f}")
+        metric_col3.metric("Recall", f"{model_info['recall_at_threshold']:.3f}")
+        metric_col4.metric("Precision", f"{model_info['precision_at_threshold']:.3f}")
+
+        st.caption(
+            "Metrics are loaded from training artifacts. "
+            "No model retraining occurs in this dashboard."
+        )
+
+    except Exception as e:
+        st.error("Model info file not found or invalid.")
+
+# TOP DRIVERS PANEL (LOAD FROM CSV)
+
+st.divider()
+
+with st.expander("Top Model Drivers (Associations Only)", expanded=False):
+
+    try:
+        coef_df = pd.read_csv("artifacts/top10_coefficients.csv")
+
+        coef_df["direction"] = coef_df["coefficient"].apply(
+            lambda x: "+ Higher likelihood of flag" if x > 0
+            else "- Lower likelihood of flag"
+        )
+
+        st.dataframe(
+            coef_df[["feature", "coefficient", "direction", "abs_coef"]],
+            width="stretch"
+        )
+
+        st.caption(
+            "Coefficients are log-odds from logistic regression. "
+            "Displayed as statistical associations only."
+        )
+
+    except Exception:
+        st.error("Top coefficients file not found.")
+
+# VALIDATION VIEW – ROBUSTNESS CHECK
+
+st.divider()
+st.header("Validation View: Shelter Cost Burden Gradient")
+
+try:
+    robustness_df = pd.read_csv("artifacts/pstir_robustness.csv")
+    #st.write(robustness_df.columns.tolist())
+    
+    fig_validation = px.line(
+        robustness_df,
+        x="PSTIR_GR_Clean",
+        y=["flagged_rate","true_stress_rate"],
+        
+        markers=True
+    )
+
+    fig_validation.update_layout(
+        xaxis_title="Shelter Cost-to-Income Group",
+        yaxis_title="% Flagged",
+        template="plotly_white",
+        height=450
+    )
+
+    st.plotly_chart(fig_validation, width="stretch")
+
+    
+
+    st.caption(
+        "Robustness check based on stored validation artifact. "
+        "Monotonic increase confirms economic consistency."
+    )
+
+except Exception:
+    st.error("Robustness file not found.")
 
 # Confusion Matrix Components
 
