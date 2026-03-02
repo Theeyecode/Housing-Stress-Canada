@@ -37,3 +37,9 @@ def load_scored_data():
     require_columns(df, required_columns)
 
     return df
+
+# Data Loader for Decision Support Page
+@st.cache_data
+def load_decision_support_data():
+    df = pd.read_csv("artifacts/dashboard_households.csv")
+    return df
