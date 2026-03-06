@@ -1,67 +1,51 @@
 import streamlit as st
 
-st.title("Exploratory Data Analysis (EDA) Summary")
+st.title("Hypothesis Testing Findings")
 
 st.markdown("""
-This page presents key descriptive findings from the 
-Canadian Housing Survey (CHS) 2022 dataset.
-
-All statistics and figures were generated during the EDA phase
-in `descriptive_stat.ipynb`. No transformations or modeling
-are performed on this page.
+This page presents the results of the hypothesis testing conducted during
+the Exploratory Data Analysis phase using the CHS 2022 dataset.
 """)
 
 st.divider()
 
-# 1. Core Housing Need by Income Quintile
 
-st.header("Core Housing Need by Income Quintile")
+# H1
+st.header("H1: Renters Experience Higher Housing Stress")
 
-st.markdown("""
-Lower-income households experience significantly higher
-rates of core housing need.
+st.image(
+    "housing_need_by_tenure.png",
+    caption="Percentage of Households in Core Housing Need by Tenure",
+    use_container_width=True
+)
 
-This confirms the economic vulnerability gradient.
-""")
+st.image(
+    "stir_distribution_by_tenure_stacked.png",
+    caption="Distribution of Shelter Cost-to-Income Ratio by Tenure",
+    use_container_width=True
+)
+
+st.divider()
+
+# H2
+st.header("H2: Lower Income Households Experience Higher Housing Stress")
 
 st.image(
     "housing_need_by_income_quintile.png",
     caption="Percentage of Households in Core Housing Need by Income Quintile",
-    width="stretch"
+    use_container_width=True
 )
 
 st.divider()
 
-# 2. Shelter Cost-to-Income Ratio by Tenure
 
-st.header("Shelter Cost-to-Income Ratio (STIR) by Tenure")
-
-st.markdown("""
-Renters and owners with mortgages experience higher
-shelter-cost burdens compared to owners without mortgages.
-""")
-
-st.image(
-    "stir_distribution_by_tenure_stacked.png",
-    caption="Distribution of STIR by Tenure Group",
-    width="stretch"
-)
-
-st.divider()
-
-# 3. Core Housing Need by Province
-
-st.header("Core Housing Need by Province")
-
-st.markdown("""
-There is substantial provincial variation in housing stress,
-with British Columbia and Ontario showing higher prevalence.
-""")
+# H3
+st.header("H3: Housing Stress Varies Across Provinces")
 
 st.image(
     "core_housing_need_by_province.png",
     caption="Percentage of Households in Core Housing Need by Province",
-    width="stretch"
+    use_container_width=True
 )
 
 st.divider()
