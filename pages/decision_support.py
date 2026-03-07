@@ -509,9 +509,7 @@ st.divider()
 #     )
 
 
-# ============================================================
 # STRATEGY CURVES
-# ============================================================
 st.subheader("Strategy Curves (Targeting Efficiency)")
 
 if "Cum_Pop" in strategy_curves.columns and "Cum_Stress" in strategy_curves.columns:
@@ -543,9 +541,7 @@ if "Cum_Pop" in strategy_curves.columns and "Cum_Stress" in strategy_curves.colu
 else:
     st.warning("Strategy curves file is missing expected columns.")
 
-# ============================================================
 # OPTIONAL ROBUSTNESS DISPLAY
-# ============================================================
 if pstir_robust is not None:
     if "PSTIR_GR_Clean" in pstir_robust.columns:
         y_candidates = [c for c in ["flagged_rate", "true_stress_rate", "predicted_risk_mean"] if c in pstir_robust.columns]
@@ -568,9 +564,7 @@ if pstir_robust is not None:
             st.plotly_chart(fig_pstir, width="stretch")
             st.caption("A monotonic gradient supports economic consistency. Displayed values are precomputed artifacts.")
 
-# ============================================================
 # EXPORT
-# ============================================================
 st.divider()
 st.subheader("Export")
 
@@ -580,6 +574,90 @@ st.download_button(
     file_name="filtered_dashboard_households.csv",
     mime="text/csv",
 )
+
+# PRESCRIPTIVE ANALYTICS VISUALS
+
+st.divider()
+st.header("Prescriptive Analytics Outputs")
+
+def resolve_image(filename: str) -> Path:
+    """
+    Resolve images stored in the project root (as shown in repo structure).
+    """
+    candidates = [
+        BASE_DIR / filename,                 # project root
+        BASE_DIR / "assets" / filename,      # fallback if later moved
+        BASE_DIR / "artifacts" / filename,   # fallback if later moved
+    ]
+    for p in candidates:
+        if p.exists():
+            return p
+    return candidates[0]
+
+
+IMG_DECISION_SUMMARY = resolve_image("decision_support_summary_graphs.png")
+IMG_MILESTONE_SUMMARY = resolve_image("milestone_summary.png")
+IMG_STRATEGY_HIDDEN = resolve_image("strategy_lift_curve_hidden_stress_ROI_simulation.png")
+IMG_STRATEGY_CONT = resolve_image("strategy_lift_curve_continuous_strategy_comparison.png")
+IMG_THRESHOLD = resolve_image("administrative_workload_and_threshold_optimization.png")
+IMG_POLICY_MATRIX = resolve_image("policy_matrix_table.png")
+
+# ---- 1. Decision support summary
+if IMG_DECISION_SUMMARY.exists():
+    st.subheader("Decision Support Summary Graphs")
+    st.image(
+        str(IMG_DECISION_SUMMARY),
+        caption="Summary prescriptive analytics outputs for decision support.",
+        width="stretch"
+    )
+
+# ---- 2. Milestone summary
+if IMG_MILESTONE_SUMMARY.exists():
+    st.subheader("Key Milestones")
+    st.image(
+        str(IMG_MILESTONE_SUMMARY),
+        caption="Milestone summary of budget caps, capture rates, and marginal gains.",
+        width="stretch"
+    )
+
+# ---- 3. Strategy lift curves
+col1, col2 = st.columns(2)
+
+if IMG_STRATEGY_HIDDEN.exists():
+    with col1:
+        st.subheader("Hidden Stress ROI Simulation")
+        st.image(
+            str(IMG_STRATEGY_HIDDEN),
+            caption="Strategy lift curve for capturing hidden housing stress.",
+            width="stretch"
+        )
+
+if IMG_STRATEGY_CONT.exists():
+    with col2:
+        st.subheader("Continuous Strategy Comparison")
+        st.image(
+            str(IMG_STRATEGY_CONT),
+            caption="Strategy lift curve comparing ML, income-based, and random allocation.",
+            width="stretch"
+        )
+
+# ---- 4. Threshold optimization
+if IMG_THRESHOLD.exists():
+    st.subheader("Administrative Workload and Threshold Optimization")
+    st.image(
+        str(IMG_THRESHOLD),
+        caption="Operational trade-off between caseload volume and targeting precision.",
+        width="stretch"
+    )
+
+# ---- 5. Policy matrix image
+if IMG_POLICY_MATRIX.exists():
+    st.subheader("Policy Matrix")
+    st.image(
+        str(IMG_POLICY_MATRIX),
+        caption="Tier-based policy intervention matrix from prescriptive analytics.",
+        width="stretch"
+    )
 
 # import streamlit as st
 # import pandas as pd
