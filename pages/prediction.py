@@ -46,15 +46,15 @@ def safe_multiselect(label, col):
 
 province_filter = safe_multiselect("Province", "Province_Name")
 tenure_filter = safe_multiselect("Tenure Group", "Tenure_Group")
-risk_filter = safe_multiselect("Risk Band", "Risk_Band")
+# risk_filter = safe_multiselect("Risk Band", "Risk_Band")
 
 filtered_df = df.copy()
 if province_filter and "Province_Name" in filtered_df.columns:
     filtered_df = filtered_df[filtered_df["Province_Name"].isin(province_filter)]
 if tenure_filter and "Tenure_Group" in filtered_df.columns:
     filtered_df = filtered_df[filtered_df["Tenure_Group"].isin(tenure_filter)]
-if risk_filter and "Risk_Band" in filtered_df.columns:
-    filtered_df = filtered_df[filtered_df["Risk_Band"].isin(risk_filter)]
+# if risk_filter and "Risk_Band" in filtered_df.columns:
+#     filtered_df = filtered_df[filtered_df["Risk_Band"].isin(risk_filter)]
 
 st.caption(f"Filtered observations: {len(filtered_df):,} / {len(df):,}")
 
