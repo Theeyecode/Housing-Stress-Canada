@@ -211,13 +211,13 @@ with st.sidebar:
 
     provinces = sorted(households["Province_Name"].dropna().unique()) if "Province_Name" in households.columns else []
     tenures = sorted(households["Tenure_Group"].dropna().unique()) if "Tenure_Group" in households.columns else []
-    risks = sorted(households["Risk_Band"].dropna().unique()) if "Risk_Band" in households.columns else []
+    # risks = sorted(households["Risk_Band"].dropna().unique()) if "Risk_Band" in households.columns else []
     segments = sorted(households["Risk_Segment"].dropna().unique()) if "Risk_Segment" in households.columns else []
     incomes = sorted(households["Income_Quintile"].dropna().unique()) if "Income_Quintile" in households.columns else []
 
     province_sel = st.multiselect("Province", options=provinces, default=[])
     tenure_sel = st.multiselect("Tenure Group", options=tenures, default=[])
-    risk_sel = st.multiselect("Risk Band", options=risks, default=[])
+    # risk_sel = st.multiselect("Risk Band", options=risks, default=[])
     segment_sel = st.multiselect("Risk Segment", options=segments, default=[])
     income_sel = st.multiselect("Income Quintile", options=incomes, default=[])
 
@@ -227,8 +227,8 @@ if province_sel and "Province_Name" in filtered.columns:
     filtered = filtered[filtered["Province_Name"].isin(province_sel)]
 if tenure_sel and "Tenure_Group" in filtered.columns:
     filtered = filtered[filtered["Tenure_Group"].isin(tenure_sel)]
-if risk_sel and "Risk_Band" in filtered.columns:
-    filtered = filtered[filtered["Risk_Band"].isin(risk_sel)]
+# if risk_sel and "Risk_Band" in filtered.columns:
+#     filtered = filtered[filtered["Risk_Band"].isin(risk_sel)]
 if segment_sel and "Risk_Segment" in filtered.columns:
     filtered = filtered[filtered["Risk_Segment"].isin(segment_sel)]
 if income_sel and "Income_Quintile" in filtered.columns:
@@ -344,7 +344,7 @@ else:
     if flagged_rate_val is not None:
         m2.metric("Flagged Rate", f"{flagged_rate_val:.2%}")
     if precision_val is not None:
-        m3.metric("Precision", f"{precision_val:.2%}")
+        m3.metric("Precision", f"{precision_val:.2f}%")
     if recall_val is not None:
         m4.metric("Recall", f"{recall_val:.2%}")
     if coverage_val is not None:
