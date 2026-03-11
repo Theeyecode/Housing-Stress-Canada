@@ -203,9 +203,7 @@ PHTYPE_LABELS = {
     5: "Other Family Household",
     6: "Multiple-family Household",
     99: "Not Stated"
-    }   
-
-
+}
 # SIDEBAR FILTERS
 with st.sidebar:
     st.header("Decision Filters")
