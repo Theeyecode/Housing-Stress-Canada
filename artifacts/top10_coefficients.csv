@@ -1,11 +1,11 @@
 feature_clean,coefficient,direction
-Household Income,-6.9722225417896375,decrease stress
-Province: Quebec,-2.191469118709238,decrease stress
-Province: Prince Edward Island,-1.772684069361872,decrease stress
-Province: New Brunswick,-1.3037363590967976,decrease stress
-Province: Newfoundland and Labrador,-1.0822913827506666,decrease stress
-Household Size,0.846734293302922,increase stress
-Province: Manitoba,-0.7840937349650922,decrease stress
-Income Quintile Q4 (vs Q1 lowest income),-0.7742192141073583,decrease stress
-Province: Nova Scotia,-0.629649778949084,decrease stress
-Income Quintile Q3 (vs Q1 lowest income),-0.5461107639941751,decrease stress
+Household Income,-6.972216601216785,decrease stress
+Province: Quebec,-2.191469136625138,decrease stress
+Province: Prince Edward Island,-1.772684329233722,decrease stress
+Province: New Brunswick,-1.3037363457909599,decrease stress
+Province: Newfoundland and Labrador,-1.0822914218696382,decrease stress
+Household Size,0.846734308741016,increase stress
+Province: Manitoba,-0.7840934988368864,decrease stress
+Income Quintile Q4 (vs Q1 lowest income),-0.774224128012322,decrease stress
+Province: Nova Scotia,-0.629649900822379,decrease stress
+Income Quintile Q3 (vs Q1 lowest income),-0.5461134480660826,decrease stress
