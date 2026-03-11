@@ -202,6 +202,7 @@ PHTYPE_LABELS = {
     4: "Lone-parent Family",
     5: "Other Family Household",
     6: "Multiple-family Household",
+    99: "Not Stated"
 }
 
 
