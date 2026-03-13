@@ -120,7 +120,7 @@ with st.expander("Top Model Drivers (Associations Only)", expanded=False):
             coef_df = pd.read_csv(TOP10_COEF_PATH)
 
             # Expected: feature, coefficient, abs_coef (you have these)
-            needed = ["feature", "coefficient"]
+            needed = ["feature_clean", "coefficient"]
             if any(c not in coef_df.columns for c in needed):
                 st.warning(f"top10_coefficients.csv missing expected columns: {needed}")
             else:
@@ -134,7 +134,7 @@ with st.expander("Top Model Drivers (Associations Only)", expanded=False):
                 )
 
                 st.dataframe(
-                    coef_df[["feature", "coefficient", "direction", "abs_coef"]],
+                    coef_df[["feature_clean", "coefficient", "direction", "abs_coef"]],
                     width="stretch"
                 )
 
