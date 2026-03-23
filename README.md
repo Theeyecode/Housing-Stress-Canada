@@ -1,6 +1,8 @@
 # Housing Affordability Stress in Canada: A Household-Level, Data-Driven Decision Support
 
 ## Project Overview
+![PHOTO-2026-03-23-12-19-09](https://github.com/user-attachments/assets/34250098-9baa-459c-bfa7-2be1218bcd71)
+
 This capstone project examines housing affordability stress among Canadian households
 using household-level microdata from Statistics Canada’s **Canadian Housing Survey (CHS) 2022 Public Use Microdata File (PUMF).
 
